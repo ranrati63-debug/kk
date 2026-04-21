@@ -453,9 +453,22 @@ body {
   font-size: 11.5px; font-weight: 800; letter-spacing: 0.5px;
   margin-bottom: 10px;
 }
-.badge-sweet     { background: rgba(255,199,0,0.2); color: var(--yellow); border: 1px solid rgba(255,199,0,0.4); }
-.badge-colddrink { background: rgba(66,133,244,0.2); color: #7ab8ff;      border: 1px solid rgba(100,170,255,0.4); }
-.badge-mojito    { background: rgba(52,199,89,0.2);  color: #5dde87;      border: 1px solid rgba(52,199,89,0.4); }
+.badge-sweet     { background: rgba(255,199,0,0.18); color: var(--yellow);  border: 1px solid rgba(255,199,0,0.38); }
+.badge-drink     { background: rgba(66,133,244,0.18); color: #7ab8ff;       border: 1px solid rgba(100,170,255,0.35); }
+.badge-mojito    { background: rgba(52,199,89,0.18);  color: #5dde87;       border: 1px solid rgba(52,199,89,0.35); }
+.badge-discount  { background: rgba(255,120,0,0.18);  color: #ffaa55;       border: 1px solid rgba(255,140,0,0.38); }
+
+/* ── COUPON DISCOUNT LINE inside menu ── */
+.coupon-discount-line {
+  display: none;
+  align-items: center; justify-content: space-between;
+  background: rgba(52,199,89,0.1);
+  border: 1px solid rgba(52,199,89,0.25);
+  border-radius: 10px; padding: 8px 12px;
+  margin-bottom: 12px;
+}
+.cdl-label { font-size: 12px; font-weight: 600; color: #5dde87; }
+.cdl-saving { font-size: 13px; font-weight: 800; color: #5dde87; }
 
 /* ── COUPON PRIZE TAG ── */
 .coupon-prize-tag {
@@ -690,6 +703,11 @@ body {
         <button class="coupon-apply-btn" id="couponApplyBtn">Apply</button>
       </div>
       <div class="coupon-applied-msg" id="couponAppliedMsg" style="display:none"></div>
+    </div>
+
+    <!-- Live discount line — shows when coupon is active -->
+    <div class="coupon-discount-line" id="couponDiscountLine">
+      <span class="cdl-label"></span><span class="cdl-saving"></span>
     </div>
 
     <p class="menu-cat-title">🍛 Biryani</p>
@@ -964,11 +982,375 @@ body {
 </div>
 
 <script>
-// ═══ WHEEL ═══
-// ── SEGMENTS ──
-// Weighted probability: Sweet 60%, Cold Drink 35%, Mojito 5%
-// We use 20 visual segments mapped to weights via a probability table
+// ══════════════════════════════════════════════
+// WHEEL — 8 clean segments, 4 prize types
+// Sweet 60% | Cold Drink 20% | Mojito 5% | 10% Off 15%
+// ══════════════════════════════════════════════
 var segments = [
+  { label:'Free Sweet',  type:'sweet',    color:'#8c0004', icon:'🍮' },
+  { label:'Free Drink',  type:'drink',    color:'#1a4a8c', icon:'🥤' },
+  { label:'Free Sweet',  type:'sweet',    color:'#6a0002', icon:'🍮' },
+  { label:'10% Off',     type:'discount', color:'#4a3000', icon:'🏷️' },
+  { label:'Free Sweet',  type:'sweet',    color:'#8c0004', icon:'🍮' },
+  { label:'Free Mojito', type:'mojito',   color:'#1a5c00', icon:'🍹' },
+  { label:'Free Sweet',  type:'sweet',    color:'#6a0002', icon:'🍮' },
+  { label:'Free Drink',  type:'drink',    color:'#1a3d7a', icon:'🥤' },
+];
+
+// Weighted random using probability table
+// Sweet=60%, Cold Drink=20%, Mojito=5%, 10%Off=15%
+var PRIZES = {
+  sweet:    { type:'sweet',    label:'Free Sweet 🍮',      emoji:'🍮', prefix:'DDSWEET',   desc:'You get a FREE Sweet (Double Ka Meetha) with your order!',   badge:'🍮 Sweet Win!',   badgeCls:'badge-sweet'    },
+  drink:    { type:'drink',    label:'Free Cold Drink 🥤', emoji:'🥤', prefix:'DDDRINK',   desc:'You get a FREE Cold Drink (Lassi) with your order!',          badge:'🥤 Cool Win!',    badgeCls:'badge-drink'    },
+  mojito:   { type:'mojito',   label:'Free Mojito 🍹',     emoji:'🍹', prefix:'DDMOJITO',  desc:'You get a FREE Mojito with your order! Super lucky! 🎉',      badge:'🌟 Rare Win!',    badgeCls:'badge-mojito'   },
+  discount: { type:'discount', label:'10% Discount 🏷️',   emoji:'🏷️', prefix:'DDTEN',     desc:'You get 10% OFF your entire order!',                         badge:'🏷️ 10% Off!',    badgeCls:'badge-discount' },
+};
+
+var WEIGHTS = [
+  { type:'sweet',    w:60 },
+  { type:'drink',    w:20 },
+  { type:'discount', w:15 },
+  { type:'mojito',   w:5  },
+];
+
+function weightedRandom() {
+  var r = Math.random() * 100, cum = 0;
+  for(var i=0;i<WEIGHTS.length;i++){
+    cum += WEIGHTS[i].w;
+    if(r < cum) return PRIZES[WEIGHTS[i].type];
+  }
+  return PRIZES.sweet;
+}
+
+function getSegmentForType(type) {
+  var arr=[];
+  segments.forEach(function(s,i){ if(s.type===type) arr.push(i); });
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function genCoupon(prefix) {
+  var k='dd2_'+prefix, n=parseInt(localStorage.getItem(k)||'100');
+  localStorage.setItem(k, n+1);
+  return prefix+(n+1);
+}
+
+var N=segments.length, curAngle=0, spinning=false, wonCoupon='', wonPrize=null;
+var appliedCoupon=null; // {code, type, label}
+
+// ── VALID COUPON REGISTRY — all issued coupons this session ──
+var issuedCoupons = JSON.parse(localStorage.getItem('dd_issued')||'{}');
+
+function drawWheelOnCanvas(cv, size) {
+  var ctx=cv.getContext('2d');
+  var half=size/2, r=half-4, arc=(2*Math.PI)/N;
+  ctx.clearRect(0,0,size,size);
+  segments.forEach(function(seg,i){
+    var s=i*arc-Math.PI/2, e=s+arc;
+    // Slice
+    ctx.beginPath(); ctx.moveTo(half,half); ctx.arc(half,half,r,s,e); ctx.closePath();
+    ctx.fillStyle=seg.color; ctx.fill();
+    ctx.strokeStyle='rgba(255,199,0,0.55)'; ctx.lineWidth=1.5; ctx.stroke();
+    // Content — rotated to face outward
+    ctx.save(); ctx.translate(half,half); ctx.rotate(s+arc/2);
+    var mid=r*0.64;
+    ctx.textAlign='center';
+    // emoji icon
+    ctx.font=(size<200?12:16)+'px serif';
+    ctx.fillText(seg.icon, mid, size<200?-3:-4);
+    // label text
+    ctx.fillStyle='rgba(255,215,0,0.95)';
+    ctx.font='bold '+(size<200?7:9.5)+'px DM Sans,sans-serif';
+    ctx.fillText(seg.label, mid, size<200?7:10);
+    ctx.restore();
+  });
+  // Gold outer ring
+  ctx.beginPath(); ctx.arc(half,half,r,0,2*Math.PI);
+  ctx.strokeStyle='rgba(255,199,0,0.8)'; ctx.lineWidth=3; ctx.stroke();
+}
+
+function drawWheel() {
+  drawWheelOnCanvas(document.getElementById('wheel'), 170);
+  drawWheelOnCanvas(document.getElementById('wheelPopup'), 240);
+}
+drawWheel();
+
+function getTodayKey(){ return 'dd_spin_'+new Date().toDateString(); }
+(function(){
+  if(localStorage.getItem(getTodayKey())){
+    document.getElementById('spinBtn').disabled=true;
+    document.getElementById('spinBtnPopup').disabled=true;
+    document.getElementById('spinMsg').textContent='✓ Spun today – come back tomorrow!';
+    document.getElementById('spinMsgPopup').textContent='✓ Spun today – come back tomorrow!';
+  }
+})();
+
+// ═══ HELPERS ═══
+function openOverlay(id){ document.getElementById(id).classList.add('show'); }
+function closeOverlay(id){ document.getElementById(id).classList.remove('show'); }
+function addTap(el,fn){
+  if(!el)return;
+  el.addEventListener('touchstart',function(e){ e.preventDefault(); fn(e); },{passive:false});
+  el.addEventListener('click',fn);
+}
+
+// ═══ CART ═══
+var ITEMS={
+  '1':{name:'Chicken Dum Biryani',price:199},
+  '2':{name:'Mutton Dum Biryani',price:269},
+  '3':{name:'Veg Dum Biryani',price:149},
+  '4':{name:'Prawn Dum Biryani',price:299},
+  '5':{name:'Egg Dum Biryani',price:159},
+  '6':{name:'Raita',price:39},
+  '7':{name:'Chicken 65',price:159},
+  '8':{name:'Lassi',price:59},
+  '9':{name:'Double Ka Meetha',price:89},
+  '10':{name:'Kulfi Falooda',price:99}
+};
+var cart={};
+
+// Prize item values for free-item coupons
+var PRIZE_VALUES={ sweet:89, drink:59, mojito:79 };
+// Prize item names for WhatsApp order
+var PRIZE_NAMES={ sweet:'🍮 Free Sweet (Double Ka Meetha)', drink:'🥤 Free Cold Drink (Lassi)', mojito:'🍹 Free Mojito' };
+
+function changeQty(id,delta){
+  var cur=cart[id]||0, next=Math.max(0,cur+delta);
+  if(next===0) delete cart[id]; else cart[id]=next;
+  var qEl=document.getElementById('qty-'+id);
+  if(qEl) qEl.textContent=next;
+  document.getElementById('mi-'+id).classList.toggle('in-cart',next>0);
+  updateCartUI();
+}
+
+function calcDiscount(subtotal){
+  if(!appliedCoupon) return 0;
+  if(appliedCoupon.type==='discount') return Math.round(subtotal*0.1);
+  var v=PRIZE_VALUES[appliedCoupon.type]||0;
+  return Math.min(v, subtotal);
+}
+
+function updateCartUI(){
+  var ids=Object.keys(cart);
+  var qty=ids.reduce(function(s,id){return s+cart[id];},0);
+  var sub=ids.reduce(function(s,id){return s+cart[id]*ITEMS[id].price;},0);
+  var disc=calcDiscount(sub);
+  var total=sub-disc;
+
+  var bar=document.getElementById('cartBar');
+  if(qty>0){
+    bar.classList.add('show');
+    document.getElementById('cartCountBubble').textContent=qty;
+    if(disc>0){
+      document.getElementById('cartTotal').innerHTML=
+        '₹'+total+'&nbsp;<span style="font-size:9.5px;text-decoration:line-through;opacity:0.55">₹'+sub+'</span>';
+    } else {
+      document.getElementById('cartTotal').textContent='₹'+sub;
+    }
+    var ind=document.getElementById('couponAppliedInd');
+    if(ind) ind.style.display=appliedCoupon?'block':'none';
+  } else {
+    bar.classList.remove('show');
+  }
+  var badge=document.getElementById('mainCartBadge');
+  badge.textContent=qty>0?qty+' items':'';
+  badge.classList.toggle('show',qty>0);
+
+  // Also update live discount line inside menu
+  updateMenuCouponLine(sub,disc,total);
+}
+
+function updateMenuCouponLine(sub,disc,total){
+  var lineEl=document.getElementById('couponDiscountLine');
+  if(!lineEl)return;
+  if(appliedCoupon&&disc>0){
+    var tag=appliedCoupon.type==='discount'?'10% off your order':PRIZE_NAMES[appliedCoupon.type]||appliedCoupon.label;
+    lineEl.innerHTML='<span class="cdl-label">🎁 '+tag+'</span><span class="cdl-saving">−₹'+disc+'</span>';
+    lineEl.style.display='flex';
+  } else {
+    lineEl.style.display='none';
+  }
+}
+
+function orderViaWhatsApp(){
+  var ids=Object.keys(cart);
+  if(!ids.length) return;
+  var sub=ids.reduce(function(s,id){return s+cart[id]*ITEMS[id].price;},0);
+  var disc=calcDiscount(sub), total=sub-disc;
+  var msg='🍛 *New Order – Dum Dynasty* 🍛\n\n📋 *Order Details:*\n';
+  ids.forEach(function(id){ msg+='• '+ITEMS[id].name+' x'+cart[id]+' = ₹'+(ITEMS[id].price*cart[id])+'\n'; });
+  if(appliedCoupon){
+    var tag=appliedCoupon.type==='discount'?'10% Discount':PRIZE_NAMES[appliedCoupon.type]||appliedCoupon.label;
+    msg+='\n🎁 *Coupon: '+appliedCoupon.code+'*\n   → '+tag+' applied\n';
+  }
+  msg+='\n💰 *Subtotal: ₹'+sub+'*';
+  if(disc>0) msg+='\n🎉 *Discount: −₹'+disc+'*\n✅ *Total Payable: ₹'+total+'*';
+  msg+='\n\nPlease confirm my order!';
+  window.open('https://wa.me/918249692577?text='+encodeURIComponent(msg),'_blank');
+}
+
+// ═══ CART CONTROLS — touchstart delegation ═══
+var menuOverlay=document.getElementById('menuOverlay');
+function handleCtrl(e){
+  var btn=e.target.closest('.ctrl-btn');
+  if(!btn) return;
+  e.preventDefault(); e.stopPropagation();
+  changeQty(btn.getAttribute('data-id'), parseInt(btn.getAttribute('data-delta'),10));
+}
+menuOverlay.addEventListener('touchstart',handleCtrl,{passive:false});
+menuOverlay.addEventListener('click',handleCtrl);
+
+// ═══ BUTTON BINDINGS ═══
+addTap(document.getElementById('menuBtn'),function(e){ e.preventDefault(); openOverlay('menuOverlay'); });
+addTap(document.getElementById('offerBtn'),function(e){ e.preventDefault(); openOverlay('offerOverlay'); });
+addTap(document.getElementById('menuClose'),function(){ closeOverlay('menuOverlay'); });
+addTap(document.getElementById('offerClose'),function(){ closeOverlay('offerOverlay'); });
+addTap(document.getElementById('claimClose'),function(){ closeOverlay('claimModal'); });
+addTap(document.getElementById('spinOverlayClose'),function(){ closeOverlay('spinOverlay'); });
+addTap(document.getElementById('spinCardMain'),function(e){
+  if(e.target.closest('#spinBtn')) return;
+  openOverlay('spinOverlay');
+});
+
+['menuOverlay','offerOverlay','resultModal','claimModal','spinOverlay'].forEach(function(id){
+  document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) closeOverlay(id); });
+});
+
+// ═══ SPIN LOGIC ═══
+function doSpinAction(iBtn, pBtn, iMsg, pMsg, wEl, wpEl){
+  if(spinning||localStorage.getItem(getTodayKey())) return;
+  spinning=true;
+  iBtn.disabled=true; iBtn.textContent='⏳ Spinning…';
+  pBtn.disabled=true; pBtn.textContent='⏳ Spinning…';
+
+  wonPrize  = weightedRandom();
+  var land  = getSegmentForType(wonPrize.type);
+  wonCoupon = genCoupon(wonPrize.prefix);
+
+  // Register coupon so it can be validated later
+  issuedCoupons[wonCoupon.toUpperCase()] = { type:wonPrize.type, label:wonPrize.label };
+  localStorage.setItem('dd_issued', JSON.stringify(issuedCoupons));
+
+  var sa=360/N;
+  var extra=6+Math.floor(Math.random()*4);
+  var landAngle=land*sa+sa/2;
+  curAngle=(curAngle%360)+(extra*360+(360-landAngle));
+
+  wEl.style.transition=wpEl.style.transition='transform 4.2s cubic-bezier(.17,.67,.12,1)';
+  wEl.style.transform=wpEl.style.transform='rotate('+curAngle+'deg)';
+
+  setTimeout(function(){
+    spinning=false;
+    localStorage.setItem(getTodayKey(),'1');
+    var done='✓ Spun for today – come back tomorrow!';
+    iMsg.textContent=pMsg.textContent=done;
+    iBtn.textContent=pBtn.textContent='🎯 Already Spun';
+
+    document.getElementById('resultEmoji').textContent = wonPrize.emoji;
+    document.getElementById('resultTitle').textContent = 'You Won '+wonPrize.label+'!';
+    document.getElementById('resultDesc').textContent  = wonPrize.desc;
+    document.getElementById('resultCode').textContent  = wonCoupon;
+    var rb=document.getElementById('resultPrizeBadge');
+    rb.textContent=wonPrize.badge; rb.className='result-prize-badge '+wonPrize.badgeCls;
+    closeOverlay('spinOverlay');
+    openOverlay('resultModal');
+  },4400);
+}
+
+var iBtn=document.getElementById('spinBtn'), pBtn=document.getElementById('spinBtnPopup');
+var iMsg=document.getElementById('spinMsg'), pMsg=document.getElementById('spinMsgPopup');
+var wEl=document.getElementById('wheel'), wpEl=document.getElementById('wheelPopup');
+addTap(iBtn,function(){ doSpinAction(iBtn,pBtn,iMsg,pMsg,wEl,wpEl); });
+addTap(pBtn,function(){ doSpinAction(iBtn,pBtn,iMsg,pMsg,wEl,wpEl); });
+
+// ═══ RESULT → CLAIM ═══
+addTap(document.getElementById('resultCTA'),function(){
+  closeOverlay('resultModal');
+  document.getElementById('claimCouponDisplay').textContent=wonCoupon;
+  document.getElementById('successCouponCode').textContent=wonCoupon;
+  document.getElementById('claimPrizeTag').textContent=wonPrize?wonPrize.label:'';
+  document.getElementById('successPrizeTag').textContent=wonPrize?wonPrize.label:'';
+  document.getElementById('claimSuccessEmoji').textContent=wonPrize?wonPrize.emoji:'🎊';
+  document.getElementById('claimFormContent').style.display='block';
+  document.getElementById('claimSuccess').style.display='none';
+  document.getElementById('claimName').value='';
+  document.getElementById('claimPhone').value='';
+  openOverlay('claimModal');
+});
+
+// ═══ SUBMIT CLAIM ═══
+addTap(document.getElementById('submitClaimBtn'),function(){
+  var name=document.getElementById('claimName').value.trim();
+  var phone=document.getElementById('claimPhone').value.trim();
+  if(!name){ alert('Please enter your name.'); return; }
+  if(!phone||phone.length<10){ alert('Please enter a valid mobile number.'); return; }
+  var log=JSON.parse(localStorage.getItem('dd_claim_log')||'[]');
+  log.push({name,phone,coupon:wonCoupon,prize:wonPrize?wonPrize.type:'',date:new Date().toISOString()});
+  localStorage.setItem('dd_claim_log',JSON.stringify(log));
+  document.getElementById('claimFormContent').style.display='none';
+  document.getElementById('claimSuccess').style.display='block';
+});
+
+// ═══ APPLY TO CART (from success screen) ═══
+addTap(document.getElementById('applyToCartBtn'),function(){
+  var code=wonCoupon;
+  var data=issuedCoupons[code.toUpperCase()];
+  if(data){
+    appliedCoupon={code:code,type:data.type,label:data.label};
+    var inp=document.getElementById('couponCodeInput');
+    if(inp) inp.value=code;
+    showCouponMsg(true,data.label);
+  }
+  closeOverlay('claimModal');
+  openOverlay('menuOverlay');
+  updateCartUI();
+});
+
+// ═══ COUPON FIELD (in menu) ═══
+function showCouponMsg(ok,label){
+  var el=document.getElementById('couponAppliedMsg');
+  if(!el) return;
+  el.style.display='block';
+  if(ok){
+    el.className='coupon-applied-msg success';
+    el.textContent='✅ '+label+' applied!';
+  } else {
+    el.className='coupon-applied-msg error';
+    el.textContent='❌ Invalid coupon. Spin the wheel to earn one!';
+  }
+  updateCartUI();
+}
+
+function tryApplyCoupon(){
+  var code=document.getElementById('couponCodeInput').value.trim().toUpperCase();
+  var el=document.getElementById('couponAppliedMsg');
+  if(!code){ if(el) el.style.display='none'; appliedCoupon=null; updateCartUI(); return; }
+
+  // Check registry
+  var data=issuedCoupons[code];
+  if(data){
+    appliedCoupon={code:code,type:data.type,label:data.label};
+    showCouponMsg(true,data.label);
+  } else {
+    appliedCoupon=null;
+    showCouponMsg(false,'');
+  }
+}
+
+addTap(document.getElementById('couponApplyBtn'), tryApplyCoupon);
+document.getElementById('couponCodeInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter') tryApplyCoupon();
+});
+
+// Cart bar order
+addTap(document.getElementById('cartBar'), orderViaWhatsApp);
+
+// ESC
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') ['menuOverlay','offerOverlay','resultModal','claimModal','spinOverlay'].forEach(closeOverlay);
+});
+</script>
+</body>
+</html>
   {label:'🍮 Free Sweet',      type:'sweet',     color:'#6a0002', icon:'🍮'},
   {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#c40307', icon:'🥤'},
   {label:'🍮 Free Sweet',      type:'sweet',     color:'#880003', icon:'🍮'},
