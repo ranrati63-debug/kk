@@ -171,6 +171,17 @@ body {
 .spin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .spin-limit-msg { font-size: 11.5px; color: var(--yellow); opacity: 0.72; margin-top: 10px; }
 
+.spin-open-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 13px 20px; border-radius: 100px;
+  border: 1.5px solid rgba(255,199,0,0.4);
+  background: rgba(255,199,0,0.08);
+  color: var(--yellow); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.spin-open-btn:active { opacity: 0.7; }
+
 /* ── FOOTER ── */
 .footer { text-align: center; padding: 8px 0; }
 .insta-link {
@@ -562,19 +573,8 @@ body {
   box-shadow: 0 0 12px rgba(0,0,0,0.4);
 }
 
-/* Make the inline spin card clickable to open popup */
-.spin-card-clickable {
-  cursor: pointer;
-  position: relative;
-}
-.spin-card-clickable::after {
-  content: 'Tap to open full wheel →';
-  display: block;
-  font-size: 10.5px; font-weight: 600;
-  color: rgba(255,199,0,0.55);
-  letter-spacing: 0.5px;
-  margin-top: 6px;
-}
+/* spin card is display-only — no click behaviour */
+.spin-card-clickable::after { display: none; }
 </style>
 </head>
 <body>
@@ -596,7 +596,7 @@ body {
   <div class="divider"><span></span><i>♛</i><span></span></div>
 
   <!-- SPIN CARD — top of page -->
-  <div class="spin-card spin-card-clickable" id="spinCardMain">
+  <div class="spin-card" id="spinCardMain">
     <p class="spin-card-title">🎡 Spin &amp; Win</p>
     <p class="spin-card-sub">One spin per day – real offers, no duds!</p>
     <div class="wheel-wrap">
@@ -604,7 +604,10 @@ body {
       <canvas id="wheel" width="170" height="170"></canvas>
       <div class="wheel-center"></div>
     </div>
-    <button class="spin-btn" id="spinBtn">🎯 &nbsp;Try Your Luck</button>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="spin-btn" id="spinBtn">🎯 &nbsp;Spin Now</button>
+      <button class="spin-open-btn" id="openSpinPopupBtn">⛶ &nbsp;Full Wheel</button>
+    </div>
     <p class="spin-limit-msg" id="spinMsg"></p>
   </div>
 
@@ -983,18 +986,19 @@ body {
 
 <script>
 // ══════════════════════════════════════════════
-// WHEEL — 8 clean segments, 4 prize types
-// Sweet 60% | Cold Drink 20% | Mojito 5% | 10% Off 15%
+// WHEEL — 8 segments, 4 distinct prize types
+// Visual: 3×Sweet  2×Drink  2×Discount  1×Mojito
+// Probability (weighted random): Sweet 60% | Drink 25% | Discount 10% | Mojito 5%
 // ══════════════════════════════════════════════
 var segments = [
-  { label:'Free Sweet',  type:'sweet',    color:'#8c0004', icon:'🍮' },
-  { label:'Free Drink',  type:'drink',    color:'#1a4a8c', icon:'🥤' },
-  { label:'Free Sweet',  type:'sweet',    color:'#6a0002', icon:'🍮' },
-  { label:'10% Off',     type:'discount', color:'#4a3000', icon:'🏷️' },
-  { label:'Free Sweet',  type:'sweet',    color:'#8c0004', icon:'🍮' },
-  { label:'Free Mojito', type:'mojito',   color:'#1a5c00', icon:'🍹' },
-  { label:'Free Sweet',  type:'sweet',    color:'#6a0002', icon:'🍮' },
+  { label:'Free Sweet',  type:'sweet',    color:'#7a0002', icon:'🍮' },
+  { label:'10% Off',     type:'discount', color:'#3d2800', icon:'🏷️' },
   { label:'Free Drink',  type:'drink',    color:'#1a3d7a', icon:'🥤' },
+  { label:'Free Sweet',  type:'sweet',    color:'#5a0001', icon:'🍮' },
+  { label:'Free Mojito', type:'mojito',   color:'#0e4a00', icon:'🍹' },
+  { label:'Free Sweet',  type:'sweet',    color:'#8c0004', icon:'🍮' },
+  { label:'10% Off',     type:'discount', color:'#4a3200', icon:'🏷️' },
+  { label:'Free Drink',  type:'drink',    color:'#102e6b', icon:'🥤' },
 ];
 
 // Weighted random using probability table
@@ -1008,8 +1012,8 @@ var PRIZES = {
 
 var WEIGHTS = [
   { type:'sweet',    w:60 },
-  { type:'drink',    w:20 },
-  { type:'discount', w:15 },
+  { type:'drink',    w:25 },
+  { type:'discount', w:10 },
   { type:'mojito',   w:5  },
 ];
 
@@ -1206,10 +1210,8 @@ addTap(document.getElementById('menuClose'),function(){ closeOverlay('menuOverla
 addTap(document.getElementById('offerClose'),function(){ closeOverlay('offerOverlay'); });
 addTap(document.getElementById('claimClose'),function(){ closeOverlay('claimModal'); });
 addTap(document.getElementById('spinOverlayClose'),function(){ closeOverlay('spinOverlay'); });
-addTap(document.getElementById('spinCardMain'),function(e){
-  if(e.target.closest('#spinBtn')) return;
-  openOverlay('spinOverlay');
-});
+// Only the dedicated button opens the spin popup — no accidental card taps
+addTap(document.getElementById('openSpinPopupBtn'),function(e){ e.preventDefault(); openOverlay('spinOverlay'); });
 
 ['menuOverlay','offerOverlay','resultModal','claimModal','spinOverlay'].forEach(function(id){
   document.getElementById(id).addEventListener('click',function(e){ if(e.target===this) closeOverlay(id); });
