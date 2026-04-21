@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dum Dynasty – King's Choice Biryani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red:      #c40307;
+  --red-dark: #8c0004;
+  --red-deep: #5a0002;
+  --yellow:   #ffc700;
+  --yellow2:  #e8a800;
+  --white:    #ffffff;
+  --border:   rgba(255,199,0,0.3);
+}
+
+html, body {
+  min-height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--red-dark);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 90% 50% at 50% 0%, rgba(255,26,26,0.2) 0%, transparent 60%),
+    linear-gradient(160deg, #c40307 0%, #8c0004 40%, #6a0003 100%);
+}
+
+.page {
+  position: relative; z-index: 1;
+  max-width: 420px; margin: 0 auto;
+  padding: 0 16px 140px;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+@keyframes fadeIn { to { opacity:1; } }
+
+/* ── HEADER ── */
+.header { text-align: center; padding: 40px 0 28px; }
+
+.logo-ring {
+  width: 104px; height: 104px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  border: 3px solid var(--yellow);
+  box-shadow: 0 0 0 2px rgba(255,199,0,0.18), 0 0 32px rgba(196,3,7,0.5), 0 6px 20px rgba(0,0,0,0.45);
+  overflow: hidden;
+  background: #1a0000;
+  display: flex; align-items: center; justify-content: center;
+}
+.logo-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px; font-weight: 900; line-height: 1.1;
+}
+.brand-dum { color: var(--yellow); }
+.brand-dyn { color: var(--white); }
+.tagline {
+  margin-top: 6px; font-size: 10.5px; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--yellow); opacity: 0.82;
+}
+
+.divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 6px 0 20px; opacity: 0.38;
+}
+.divider span { flex:1; height:1px; background: var(--yellow); }
+.divider i { color: var(--yellow); font-size:10px; }
+
+.section-label {
+  font-size: 9.5px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--yellow); opacity: 0.7; margin-bottom: 11px; padding-left: 2px;
+}
+
+/* ── ACTION BUTTONS ── */
+.actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 26px; }
+
+.btn {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 18px; border-radius: 100px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.26);
+  cursor: pointer; text-decoration: none;
+  position: relative; overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.btn:active { opacity: 0.75; transform: scale(0.97); }
+
+.btn-icon {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px; flex-shrink: 0;
+}
+.btn-text  { flex: 1; min-width: 0; }
+.btn-title { display: block; font-size: 14px; font-weight: 700; color: var(--white); line-height: 1.2; }
+.btn-sub   { display: block; font-size: 11px; color: rgba(255,255,255,0.42); margin-top: 2px; }
+.btn-arrow { font-size:18px; color: rgba(255,255,255,0.22); flex-shrink:0; }
+
+.btn-menu     .btn-icon { background: rgba(255,199,0,0.18); }
+.btn-offer    .btn-icon { background: rgba(255,80,0,0.18); }
+.btn-swiggy   .btn-icon { background: rgba(252,128,25,0.18); }
+.btn-zomato   .btn-icon { background: rgba(203,32,39,0.18); }
+.btn-location .btn-icon { background: rgba(66,133,244,0.18); }
+.btn-review   .btn-icon { background: rgba(255,199,0,0.18); }
+.btn-call     .btn-icon { background: rgba(52,199,89,0.18); }
+
+.menu-badge {
+  background: var(--yellow); color: #5a0002;
+  font-size: 10px; font-weight: 800;
+  padding: 2px 7px; border-radius: 20px;
+  display: none; margin-left: 4px; vertical-align: middle;
+}
+.menu-badge.show { display: inline-block; }
+
+/* ── SPIN CARD ── */
+.spin-card {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,199,0,0.28);
+  border-radius: 22px; padding: 24px 16px 20px;
+  text-align: center; margin-bottom: 26px;
+}
+.spin-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700; color: var(--yellow); margin-bottom: 3px;
+}
+.spin-card-sub { font-size: 11.5px; color: rgba(255,255,255,0.48); margin-bottom: 18px; }
+
+.wheel-wrap { position: relative; width: 170px; height: 170px; margin: 0 auto 16px; }
+#wheel {
+  width: 170px; height: 170px; border-radius: 50%;
+  transition: transform 4.2s cubic-bezier(.17,.67,.12,1);
+  box-shadow: 0 0 0 4px #8c0004, 0 0 0 7px var(--yellow), 0 8px 28px rgba(0,0,0,0.5);
+}
+.wheel-pin {
+  position: absolute; top:-12px; left:50%; transform:translateX(-50%);
+  width:0; height:0;
+  border-left:9px solid transparent; border-right:9px solid transparent;
+  border-top:20px solid var(--yellow);
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); z-index:10;
+}
+.wheel-center {
+  position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:26px; height:26px; border-radius:50%;
+  background: var(--yellow); z-index:5;
+}
+
+.spin-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 30px; border-radius: 100px; border: none;
+  background: linear-gradient(135deg, var(--yellow), var(--yellow2));
+  color: #5a0002; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 4px 18px rgba(255,199,0,0.35);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.spin-btn:active { opacity: 0.8; }
+.spin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.spin-limit-msg { font-size: 11.5px; color: var(--yellow); opacity: 0.72; margin-top: 10px; }
+
+/* ── FOOTER ── */
+.footer { text-align: center; padding: 8px 0; }
+.insta-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border-radius: 100px;
+  border: 1px solid var(--border); background: rgba(0,0,0,0.18);
+  color: var(--white); font-size: 13px; font-weight: 500;
+  text-decoration: none; margin-bottom: 16px;
+  -webkit-tap-highlight-color: transparent;
+}
+.insta-link:active { opacity: 0.7; }
+.copyright { font-size: 11px; color: rgba(255,255,255,0.22); }
+
+/* ── FLOATS ── */
+.floats {
+  position: fixed; bottom: 26px; right: 16px;
+  display: flex; flex-direction: column; gap: 12px; z-index: 50;
+}
+.float-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; font-size: 22px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+  border: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.float-btn:active { opacity: 0.8; }
+.float-wa  { background: linear-gradient(135deg,#25D366,#128C7E); }
+.float-tel { background: linear-gradient(135deg,#34c759,#20a847); }
+
+/* ══════════════════════════════════════
+   OVERLAYS
+   CRITICAL: NO backdrop-filter — breaks position:fixed on iOS Safari
+   Overlay scrolls itself, modal is just a normal block inside
+══════════════════════════════════════ */
+.overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 200;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 14px 110px;
+}
+.overlay.show { display: block; }
+
+.modal {
+  background: linear-gradient(150deg, #1c0000, #2d0002 60%, #1c0000);
+  border: 1.5px solid rgba(255,199,0,0.32);
+  border-radius: 26px; padding: 28px 18px 24px;
+  width: 100%; max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 20px 70px rgba(0,0,0,0.7);
+  position: relative;
+}
+
+.modal-close {
+  position: absolute; top: 14px; right: 14px;
+  background: rgba(255,255,255,0.1); border: none;
+  color: #fff; font-size: 15px; font-weight: 700;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.modal-close:active { opacity: 0.7; }
+
+.modal-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px; font-weight: 900; color: var(--yellow);
+  margin-bottom: 3px; text-align: center;
+}
+.modal-subtitle {
+  font-size: 11.5px; color: rgba(255,255,255,0.46);
+  text-align: center; margin-bottom: 20px;
+}
+
+/* ── MENU ITEMS ── */
+.menu-cat-title {
+  font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--yellow); opacity: 0.68; margin: 16px 0 9px;
+}
+.menu-cat-title:first-of-type { margin-top: 0; }
+
+.menu-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,199,0,0.1);
+  border-radius: 14px;
+  padding: 10px;
+}
+.menu-item.in-cart {
+  border-color: rgba(255,199,0,0.42);
+  background: rgba(255,199,0,0.06);
+}
+
+.menu-item-emoji { font-size: 24px; flex-shrink:0; width:30px; text-align:center; }
+.menu-item-info  { flex:1; min-width:0; }
+.menu-item-name  { font-size:12.5px; font-weight:600; color:var(--white); line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.menu-item-desc  { font-size:10px; color:rgba(255,255,255,0.38); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.menu-item-price { font-size:12.5px; font-weight:700; color:var(--yellow); margin-top:2px; }
+
+.badge-star {
+  display:inline-block; background:var(--yellow); color:#5a0002;
+  font-size:8px; font-weight:700; padding:1px 5px; border-radius:20px;
+  margin-left:4px; vertical-align:middle;
+}
+
+/* ── CART CONTROLS ──
+   min-width ensures they're NEVER squeezed off on narrow phones
+   touch-action + touchstart handler = instant response on iOS
+── */
+.item-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  min-width: 96px;
+  justify-content: flex-end;
+}
+
+.ctrl-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; line-height: 1;
+  cursor: pointer; flex-shrink: 0;
+  user-select: none; -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.ctrl-btn:active { opacity: 0.6; transform: scale(0.9); }
+
+.ctrl-minus { background: rgba(255,255,255,0.15); color: var(--white); }
+.ctrl-add {
+  background: linear-gradient(135deg, var(--yellow), var(--yellow2));
+  color: #5a0002;
+  box-shadow: 0 2px 8px rgba(255,199,0,0.3);
+}
+
+.ctrl-qty {
+  font-size: 15px; font-weight: 700; color: var(--yellow);
+  min-width: 18px; text-align: center;
+  user-select: none; -webkit-user-select: none;
+}
+
+/* ══════════════════════════════════════
+   CART BAR — position:fixed, z-index above overlay
+   This is the ONLY reliable way on iOS Safari.
+   Never use position:sticky inside an overflow:auto container on iOS.
+══════════════════════════════════════ */
+#cartBar {
+  display: none;
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100vw - 32px);
+  max-width: 390px;
+  background: linear-gradient(135deg, var(--yellow), var(--yellow2));
+  border-radius: 18px;
+  padding: 14px 18px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+  cursor: pointer;
+  z-index: 400;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+#cartBar.show { display: flex; }
+#cartBar:active { opacity: 0.88; }
+
+.cart-bar-left  { display: flex; align-items: center; gap: 9px; }
+.cart-count-bubble {
+  background: #5a0002; color: var(--yellow);
+  font-size: 11px; font-weight: 900;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cart-bar-label { font-size: 13px; font-weight: 700; color: #5a0002; line-height:1.2; }
+.cart-bar-sub   { font-size: 10px; color: rgba(90,0,2,0.62); }
+.cart-bar-right { display: flex; flex-direction: column; align-items: flex-end; }
+.cart-bar-total { font-size: 14px; font-weight: 800; color: #5a0002; }
+.cart-bar-cta   { font-size: 10.5px; font-weight: 600; color: rgba(90,0,2,0.68); }
+
+/* ── OFFERS ── */
+.offer-grid { display: flex; flex-direction: column; gap: 10px; }
+.offer-card {
+  background: linear-gradient(120deg, rgba(255,199,0,0.1), rgba(196,3,7,0.14));
+  border: 1px solid rgba(255,199,0,0.22);
+  border-radius: 14px; padding: 13px 14px;
+  display: flex; align-items: center; gap: 13px;
+}
+.offer-badge {
+  min-width: 50px; height: 50px; border-radius: 11px;
+  background: linear-gradient(135deg, var(--yellow), var(--yellow2));
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.offer-pct { font-size: 15px; font-weight: 900; color: #5a0002; line-height:1; }
+.offer-off { font-size: 8.5px; font-weight: 700; color: #5a0002; letter-spacing:1px; }
+.offer-info-title { font-size: 13px; font-weight: 700; color: var(--white); }
+.offer-info-desc  { font-size: 10.5px; color: rgba(255,255,255,0.46); margin-top: 3px; }
+.offer-code-wrap  { margin-top: 5px; }
+.offer-code {
+  display: inline-block; padding: 3px 9px; border-radius: 6px;
+  background: rgba(255,199,0,0.14);
+  border: 1px dashed rgba(255,199,0,0.38);
+  color: var(--yellow); font-size: 11.5px; font-weight: 700; letter-spacing: 1.5px;
+}
+
+/* ── SPIN RESULT ── */
+#resultModal .modal { text-align: center; }
+.result-emoji { font-size: 52px; margin-bottom: 10px; }
+.result-title { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--yellow); margin-bottom:8px; }
+.result-desc { font-size:13px; color:rgba(255,255,255,0.52); margin-bottom:8px; }
+.result-code {
+  display:inline-block; padding:8px 20px; border-radius:10px;
+  background:rgba(255,199,0,0.14); border:1.5px dashed rgba(255,199,0,0.48);
+  color:var(--yellow); font-size:18px; font-weight:700; letter-spacing:3px;
+  margin:8px 0 18px;
+}
+.result-btn {
+  padding:13px 28px; border-radius:100px; border:none;
+  background:linear-gradient(135deg,var(--yellow),var(--yellow2));
+  color:#5a0002; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700;
+  cursor:pointer; width:100%;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+}
+.result-btn:active { opacity:0.8; }
+
+/* ── CLAIM FORM ── */
+.form-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; color:var(--yellow); margin-bottom:4px; text-align:center; }
+.form-sub { font-size:12px; color:rgba(255,255,255,0.42); text-align:center; margin-bottom:18px; }
+.form-group { margin-bottom:13px; }
+.form-label { display:block; font-size:11px; font-weight:600; color:rgba(255,255,255,0.56); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:5px; }
+.form-input {
+  width:100%; padding:12px 15px; border-radius:13px;
+  border:1px solid rgba(255,199,0,0.22); background:rgba(255,255,255,0.06);
+  color:var(--white); font-family:'DM Sans',sans-serif; font-size:14px; outline:none;
+}
+.form-input:focus { border-color:rgba(255,199,0,0.56); }
+.form-input::placeholder { color:rgba(255,255,255,0.22); }
+.coupon-display {
+  background:rgba(255,199,0,0.09); border:1.5px dashed rgba(255,199,0,0.38);
+  border-radius:13px; padding:13px; text-align:center; margin-bottom:16px;
+}
+.coupon-label { font-size:11px; color:rgba(255,255,255,0.42); margin-bottom:4px; }
+.coupon-value { font-size:20px; font-weight:700; color:var(--yellow); letter-spacing:3px; }
+.submit-btn {
+  width:100%; padding:14px; border-radius:100px; border:none;
+  background:linear-gradient(135deg,var(--red),var(--red-dark));
+  color:var(--white); font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700;
+  cursor:pointer; -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+}
+.submit-btn:active { opacity:0.8; }
+.success-box {
+  background:rgba(52,199,89,0.1); border:1px solid rgba(52,199,89,0.28);
+  border-radius:15px; padding:20px; text-align:center; display:none;
+}
+.success-box .s-emoji { font-size:42px; margin-bottom:10px; }
+.success-box .s-title { font-size:18px; font-weight:700; color:#34c759; margin-bottom:6px; }
+.success-box .s-desc  { font-size:12px; color:rgba(255,255,255,0.46); }
+
+/* ── RESULT PRIZE BADGE ── */
+.result-prize-badge {
+  display: inline-block;
+  padding: 4px 14px; border-radius: 20px;
+  font-size: 11.5px; font-weight: 800; letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.badge-sweet     { background: rgba(255,199,0,0.2); color: var(--yellow); border: 1px solid rgba(255,199,0,0.4); }
+.badge-colddrink { background: rgba(66,133,244,0.2); color: #7ab8ff;      border: 1px solid rgba(100,170,255,0.4); }
+.badge-mojito    { background: rgba(52,199,89,0.2);  color: #5dde87;      border: 1px solid rgba(52,199,89,0.4); }
+
+/* ── COUPON PRIZE TAG ── */
+.coupon-prize-tag {
+  font-size: 13px; font-weight: 700; color: var(--yellow);
+  margin-top: 6px; letter-spacing: 0.5px;
+}
+
+/* ── APPLY TO CART BUTTON ── */
+.apply-coupon-btn {
+  width: 100%; padding: 14px; border-radius: 100px; border: none;
+  background: linear-gradient(135deg, #1a7a1a, #0f5c0f);
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  margin-top: 18px;
+  box-shadow: 0 4px 18px rgba(52,199,89,0.35);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.apply-coupon-btn:active { opacity: 0.8; }
+
+/* ── COUPON INPUT ROW (in menu) ── */
+.coupon-input-row {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  background: rgba(255,199,0,0.07);
+  border: 1px dashed rgba(255,199,0,0.3);
+  border-radius: 14px;
+}
+.coupon-input-wrap {
+  display: flex; gap: 8px; align-items: center;
+}
+.coupon-field {
+  flex: 1; padding: 10px 13px; border-radius: 10px;
+  border: 1px solid rgba(255,199,0,0.25);
+  background: rgba(255,255,255,0.06);
+  color: var(--white); font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600; letter-spacing: 1px; outline: none;
+  text-transform: uppercase;
+}
+.coupon-field:focus { border-color: rgba(255,199,0,0.55); }
+.coupon-field::placeholder { color: rgba(255,255,255,0.25); text-transform: none; font-weight: 400; letter-spacing: 0; }
+
+.coupon-apply-btn {
+  padding: 10px 16px; border-radius: 10px; border: none;
+  background: linear-gradient(135deg, var(--yellow), var(--yellow2));
+  color: #5a0002; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 800; cursor: pointer; flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.coupon-apply-btn:active { opacity: 0.8; }
+
+.coupon-applied-msg {
+  margin-top: 8px; font-size: 12px; font-weight: 600;
+  padding: 6px 10px; border-radius: 8px;
+}
+.coupon-applied-msg.success {
+  background: rgba(52,199,89,0.12); color: #5dde87;
+  border: 1px solid rgba(52,199,89,0.25);
+}
+.coupon-applied-msg.error {
+  background: rgba(255,60,60,0.12); color: #ff8080;
+  border: 1px solid rgba(255,60,60,0.25);
+}
+
+/* ── SPIN POPUP ── */
+#spinOverlay .modal { text-align: center; padding: 28px 18px 28px; }
+.spin-popup-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 900; color: var(--yellow); margin-bottom: 2px;
+}
+.spin-popup-sub { font-size: 11.5px; color: rgba(255,255,255,0.46); margin-bottom: 18px; }
+
+.wheel-wrap-lg {
+  position: relative; width: 240px; height: 240px; margin: 0 auto 20px;
+}
+#wheelPopup {
+  width: 240px; height: 240px; border-radius: 50%;
+  transition: transform 4.2s cubic-bezier(.17,.67,.12,1);
+  box-shadow: 0 0 0 5px #8c0004, 0 0 0 9px var(--yellow), 0 10px 36px rgba(0,0,0,0.55);
+}
+.wheel-pin-lg {
+  position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+  width:0; height:0;
+  border-left: 12px solid transparent; border-right: 12px solid transparent;
+  border-top: 24px solid var(--yellow);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); z-index: 10;
+}
+.wheel-center-lg {
+  position: absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--yellow); z-index: 5;
+  box-shadow: 0 0 12px rgba(0,0,0,0.4);
+}
+
+/* Make the inline spin card clickable to open popup */
+.spin-card-clickable {
+  cursor: pointer;
+  position: relative;
+}
+.spin-card-clickable::after {
+  content: 'Tap to open full wheel →';
+  display: block;
+  font-size: 10.5px; font-weight: 600;
+  color: rgba(255,199,0,0.55);
+  letter-spacing: 0.5px;
+  margin-top: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="header">
+    <div class="logo-ring">
+      <img
+        src="https://res.cloudinary.com/dmivtuufp/image/upload/v1776544865/Red_and_Orange_Modern_Restaurant_Logo_1_fioc0e.png"
+        class="logo-img"
+        alt="Dum Dynasty"
+        onerror="this.outerHTML='<span style=\'font-size:52px\'>🍛</span>';"
+      >
+    </div>
+    <h1 class="brand-name"><span class="brand-dum">Dum</span><span class="brand-dyn">Dynasty</span></h1>
+    <p class="tagline">King's Choice Biryani</p>
+  </header>
+
+  <div class="divider"><span></span><i>♛</i><span></span></div>
+
+  <!-- SPIN CARD — top of page -->
+  <div class="spin-card spin-card-clickable" id="spinCardMain">
+    <p class="spin-card-title">🎡 Spin &amp; Win</p>
+    <p class="spin-card-sub">One spin per day – real offers, no duds!</p>
+    <div class="wheel-wrap">
+      <div class="wheel-pin"></div>
+      <canvas id="wheel" width="170" height="170"></canvas>
+      <div class="wheel-center"></div>
+    </div>
+    <button class="spin-btn" id="spinBtn">🎯 &nbsp;Try Your Luck</button>
+    <p class="spin-limit-msg" id="spinMsg"></p>
+  </div>
+
+  <p class="section-label">Quick Actions</p>
+  <div class="actions">
+    <a href="#" id="menuBtn" class="btn btn-menu">
+      <div class="btn-icon">📜</div>
+      <div class="btn-text">
+        <span class="btn-title">View Menu <span class="menu-badge" id="mainCartBadge"></span></span>
+        <span class="btn-sub">Add items &amp; order via WhatsApp</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
+    <a href="https://swiggy.com" target="_blank" rel="noopener" class="btn btn-swiggy">
+      <div class="btn-icon">🛵</div>
+      <div class="btn-text">
+        <span class="btn-title">Order on Swiggy</span>
+        <span class="btn-sub">30–45 min delivery</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
+    <a href="https://zomato.com" target="_blank" rel="noopener" class="btn btn-zomato">
+      <div class="btn-icon">🍽️</div>
+      <div class="btn-text">
+        <span class="btn-title">Order on Zomato</span>
+        <span class="btn-sub">Express delivery available</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
+    <a href="#" id="offerBtn" class="btn btn-offer">
+      <div class="btn-icon">🔥</div>
+      <div class="btn-text">
+        <span class="btn-title">Today's Offers</span>
+        <span class="btn-sub">Exclusive deals just for today</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
+    <a href="https://maps.google.com/?q=Dum+Dynasty+Biryani" target="_blank" rel="noopener" class="btn btn-location">
+      <div class="btn-icon">📍</div>
+      <div class="btn-text">
+        <span class="btn-title">Find Us</span>
+        <span class="btn-sub">Open in Google Maps</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
+    <a href="https://g.page/r/review" target="_blank" rel="noopener" class="btn btn-review">
+      <div class="btn-icon">⭐</div>
+      <div class="btn-text">
+        <span class="btn-title">Leave a Review</span>
+        <span class="btn-sub">We love your feedback!</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
+    <a href="tel:+911234567890" class="btn btn-call">
+      <div class="btn-icon">📞</div>
+      <div class="btn-text">
+        <span class="btn-title">Call Us</span>
+        <span class="btn-sub">+91 12345 67890</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
+  </div>
+
+  <footer class="footer">
+    <a href="https://instagram.com/dumdynasty" target="_blank" rel="noopener" class="insta-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+      @dumdynasty
+    </a>
+    <p class="copyright">© 2025 Dum Dynasty – King's Choice Biryani</p>
+  </footer>
+</div>
+
+<div class="floats">
+  <a href="https://wa.me/918249692577?text=Hi%20Dum%20Dynasty!" target="_blank" rel="noopener" class="float-btn float-wa">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+  <a href="tel:+911234567890" class="float-btn float-tel">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+  </a>
+</div>
+
+<!-- ═══ MENU OVERLAY ═══ -->
+<div class="overlay" id="menuOverlay">
+  <div class="modal">
+    <button class="modal-close" id="menuClose">✕</button>
+    <p class="modal-title">📜 Our Menu</p>
+    <p class="modal-subtitle">Tap + to add · order via WhatsApp</p>
+
+    <!-- Coupon input row -->
+    <div class="coupon-input-row" id="couponInputRow">
+      <div class="coupon-input-wrap">
+        <input type="text" id="couponCodeInput" class="coupon-field" placeholder="Enter spin coupon code…" autocapitalize="characters">
+        <button class="coupon-apply-btn" id="couponApplyBtn">Apply</button>
+      </div>
+      <div class="coupon-applied-msg" id="couponAppliedMsg" style="display:none"></div>
+    </div>
+
+    <p class="menu-cat-title">🍛 Biryani</p>
+    <div class="menu-grid">
+      <div class="menu-item" id="mi-1">
+        <div class="menu-item-emoji">🐔</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Chicken Dum Biryani <span class="badge-star">⭐ Best</span></div>
+          <div class="menu-item-desc">Slow-cooked in sealed handi</div>
+          <div class="menu-item-price">₹199</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="1" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-1">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="1" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="menu-item" id="mi-2">
+        <div class="menu-item-emoji">🐑</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Mutton Dum Biryani</div>
+          <div class="menu-item-desc">Tender mutton, slow-cooked</div>
+          <div class="menu-item-price">₹269</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="2" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-2">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="2" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="menu-item" id="mi-3">
+        <div class="menu-item-emoji">🌿</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Veg Dum Biryani</div>
+          <div class="menu-item-desc">Garden fresh, royal spices</div>
+          <div class="menu-item-price">₹149</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="3" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-3">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="3" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="menu-item" id="mi-4">
+        <div class="menu-item-emoji">🦐</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Prawn Dum Biryani <span class="badge-star">🔥 New</span></div>
+          <div class="menu-item-desc">Coastal-style with kewra</div>
+          <div class="menu-item-price">₹299</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="4" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-4">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="4" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="menu-item" id="mi-5">
+        <div class="menu-item-emoji">🥚</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Egg Dum Biryani</div>
+          <div class="menu-item-desc">Boiled egg, aromatic spices</div>
+          <div class="menu-item-price">₹159</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="5" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-5">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="5" data-delta="1">+</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="menu-cat-title">🥘 Sides &amp; Extras</p>
+    <div class="menu-grid">
+      <div class="menu-item" id="mi-6">
+        <div class="menu-item-emoji">🧅</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Raita</div>
+          <div class="menu-item-desc">Chilled boondi raita</div>
+          <div class="menu-item-price">₹39</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="6" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-6">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="6" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="menu-item" id="mi-7">
+        <div class="menu-item-emoji">🍗</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Chicken 65</div>
+          <div class="menu-item-desc">Spicy fried chicken starter</div>
+          <div class="menu-item-price">₹159</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="7" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-7">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="7" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="menu-item" id="mi-8">
+        <div class="menu-item-emoji">🥤</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Lassi</div>
+          <div class="menu-item-desc">Sweet or salted, chilled</div>
+          <div class="menu-item-price">₹59</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="8" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-8">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="8" data-delta="1">+</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="menu-cat-title">🍮 Desserts</p>
+    <div class="menu-grid">
+      <div class="menu-item" id="mi-9">
+        <div class="menu-item-emoji">🍮</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Double Ka Meetha</div>
+          <div class="menu-item-desc">Hyderabadi bread pudding</div>
+          <div class="menu-item-price">₹89</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="9" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-9">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="9" data-delta="1">+</button>
+        </div>
+      </div>
+      <div class="menu-item" id="mi-10">
+        <div class="menu-item-emoji">🍨</div>
+        <div class="menu-item-info">
+          <div class="menu-item-name">Kulfi Falooda</div>
+          <div class="menu-item-desc">Creamy kulfi, rose falooda</div>
+          <div class="menu-item-price">₹99</div>
+        </div>
+        <div class="item-ctrl">
+          <button class="ctrl-btn ctrl-minus" data-id="10" data-delta="-1">−</button>
+          <span class="ctrl-qty" id="qty-10">0</span>
+          <button class="ctrl-btn ctrl-add" data-id="10" data-delta="1">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART BAR — outside all overlays, position:fixed z-index:400 -->
+<div id="cartBar">
+  <div class="cart-bar-left">
+    <div class="cart-count-bubble" id="cartCountBubble">0</div>
+    <div>
+      <div class="cart-bar-label">View Cart &amp; Order</div>
+      <div class="cart-bar-sub">Tap to send on WhatsApp</div>
+      <div id="couponAppliedInd" style="display:none;font-size:9.5px;color:rgba(90,0,2,0.75);font-weight:700;margin-top:1px;">🎁 Spin coupon applied!</div>
+    </div>
+  </div>
+  <div class="cart-bar-right">
+    <div class="cart-bar-total" id="cartTotal">₹0</div>
+    <div class="cart-bar-cta">via WhatsApp →</div>
+  </div>
+</div>
+
+<!-- ═══ OFFERS ═══ -->
+<div class="overlay" id="offerOverlay">
+  <div class="modal">
+    <button class="modal-close" id="offerClose">✕</button>
+    <p class="modal-title">🔥 Today's Offers</p>
+    <p class="modal-subtitle">Valid today only · Limited redemptions</p>
+    <div class="offer-grid">
+      <div class="offer-card">
+        <div class="offer-badge"><span class="offer-pct">20%</span><span class="offer-off">OFF</span></div>
+        <div class="offer-info">
+          <div class="offer-info-title">First Order Special</div>
+          <div class="offer-info-desc">20% off your very first order!</div>
+          <div class="offer-code-wrap"><span class="offer-code">DDWELCOME</span></div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-badge"><span class="offer-pct">15%</span><span class="offer-off">OFF</span></div>
+        <div class="offer-info">
+          <div class="offer-info-title">Combo Deal</div>
+          <div class="offer-info-desc">Biryani + Starter + Dessert combo</div>
+          <div class="offer-code-wrap"><span class="offer-code">DDCOMBO</span></div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-badge" style="background:linear-gradient(135deg,#c40307,#8c0004);">
+          <span class="offer-pct" style="color:#ffc700">FREE</span>
+          <span class="offer-off" style="color:#ffc700">RAITA</span>
+        </div>
+        <div class="offer-info">
+          <div class="offer-info-title">Weekend Bonus</div>
+          <div class="offer-info-desc">Free Raita on orders above ₹299!</div>
+          <div class="offer-code-wrap"><span class="offer-code">DDWEEKEND</span></div>
+        </div>
+      </div>
+      <div class="offer-card">
+        <div class="offer-badge"><span class="offer-pct">10%</span><span class="offer-off">OFF</span></div>
+        <div class="offer-info">
+          <div class="offer-info-title">Loyalty Reward</div>
+          <div class="offer-info-desc">Repeat kings — order again &amp; save!</div>
+          <div class="offer-code-wrap"><span class="offer-code">DDLOYAL</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESULT ═══ -->
+<div class="overlay" id="resultModal">
+  <div class="modal" style="text-align:center">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <div id="resultPrizeBadge" class="result-prize-badge"></div>
+    <div class="result-title" id="resultTitle">You Won!</div>
+    <p class="result-desc" id="resultDesc">You get a FREE item with your order!</p>
+    <div class="result-code" id="resultCode">DDSWEET101</div>
+    <p style="font-size:11px;color:rgba(255,255,255,0.42);margin-bottom:16px;">Valid today only · Use at checkout</p>
+    <button class="result-btn" id="resultCTA">🎁 Claim &amp; Register</button>
+  </div>
+</div>
+
+<!-- ═══ CLAIM ═══ -->
+<div class="overlay" id="claimModal">
+  <div class="modal">
+    <button class="modal-close" id="claimClose">✕</button>
+    <div id="claimFormContent">
+      <p class="form-title">🎁 Claim Your Prize</p>
+      <p class="form-sub">Register to lock in your free item</p>
+      <div class="coupon-display">
+        <div class="coupon-label">Your Spin Coupon</div>
+        <div class="coupon-value" id="claimCouponDisplay">DDSWEET101</div>
+        <div class="coupon-prize-tag" id="claimPrizeTag">🍮 Free Sweet</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-input" id="claimName" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mobile Number</label>
+        <input type="tel" class="form-input" id="claimPhone" placeholder="+91 98765 43210" maxlength="13">
+      </div>
+      <button class="submit-btn" id="submitClaimBtn">✅ Register &amp; Get Coupon</button>
+    </div>
+    <div class="success-box" id="claimSuccess">
+      <div class="s-emoji" id="claimSuccessEmoji">🎊</div>
+      <div class="s-title">Coupon Registered!</div>
+      <div class="s-desc">Your free item is locked in. Apply it to your cart now!</div>
+      <div class="coupon-display" style="margin-top:14px">
+        <div class="coupon-label">Your Code</div>
+        <div class="coupon-value" id="successCouponCode">DDSWEET101</div>
+        <div class="coupon-prize-tag" id="successPrizeTag">🍮 Free Sweet</div>
+      </div>
+      <button class="apply-coupon-btn" id="applyToCartBtn">🛒 Apply to Cart &amp; Order</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SPIN POPUP OVERLAY ═══ -->
+<div class="overlay" id="spinOverlay">
+  <div class="modal">
+    <button class="modal-close" id="spinOverlayClose">✕</button>
+    <p class="spin-popup-title">🎡 Spin &amp; Win</p>
+    <p class="spin-popup-sub">One spin per day – real offers, no duds!</p>
+    <div class="wheel-wrap-lg">
+      <div class="wheel-pin-lg"></div>
+      <canvas id="wheelPopup" width="240" height="240"></canvas>
+      <div class="wheel-center-lg"></div>
+    </div>
+    <button class="spin-btn" id="spinBtnPopup" style="font-size:15px;padding:14px 36px;">🎯 &nbsp;Spin Now!</button>
+    <p class="spin-limit-msg" id="spinMsgPopup" style="margin-top:12px;"></p>
+  </div>
+</div>
+
+<script>
+// ═══ WHEEL ═══
+// ── SEGMENTS ──
+// Weighted probability: Sweet 60%, Cold Drink 35%, Mojito 5%
+// We use 20 visual segments mapped to weights via a probability table
+var segments = [
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#6a0002', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#c40307', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#880003', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#a00004', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#6a0002', icon:'🍮'},
+  {label:'🍹 Free Mojito',     type:'mojito',    color:'#1a5c00', icon:'🍹'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#8c0004', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#c40307', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#6a0002', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#a00004', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#880003', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#c40307', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#6a0002', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#8c0004', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#880003', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#a00004', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#6a0002', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#c40307', icon:'🥤'},
+  {label:'🍮 Free Sweet',      type:'sweet',     color:'#880003', icon:'🍮'},
+  {label:'🥤 Free Cold Drink', type:'colddrink',  color:'#8c0004', icon:'🥤'},
+];
+
+// Probability table: weighted random pick
+// sweet=60%, colddrink=35%, mojito=5%
+var prizeWeights = [
+  {type:'sweet',    chance:60, label:'Free Sweet 🍮',       emoji:'🍮', couponPrefix:'DDSWEET', desc:'You get a FREE Sweet with your order!'},
+  {type:'colddrink',chance:35, label:'Free Cold Drink 🥤',  emoji:'🥤', couponPrefix:'DDCOLD',  desc:'You get a FREE Cold Drink with your order!'},
+  {type:'mojito',   chance:5,  label:'Free Mojito 🍹',       emoji:'🍹', couponPrefix:'DDMOJITO',desc:'You get a FREE Mojito with your order! Lucky you! 🎉'},
+];
+
+function weightedRandom() {
+  var r = Math.random() * 100;
+  var cum = 0;
+  for(var i=0;i<prizeWeights.length;i++){
+    cum += prizeWeights[i].chance;
+    if(r < cum) return prizeWeights[i];
+  }
+  return prizeWeights[0];
+}
+
+// Map winning type to a matching segment index for visual landing
+function getSegmentForType(type) {
+  var indices = [];
+  segments.forEach(function(s,i){ if(s.type===type) indices.push(i); });
+  return indices[Math.floor(Math.random()*indices.length)];
+}
+
+function genCoupon(prefix) {
+  var k='dd_cc_'+prefix;
+  var n=parseInt(localStorage.getItem(k)||'100');
+  localStorage.setItem(k,n+1);
+  return prefix+(n+1);
+}
+
+var N=segments.length, curAngle=0, spinning=false, wonCoupon='', wonPrize=null;
+// Active spin coupon applied to cart
+var appliedCoupon=null;
+
+function drawWheelOnCanvas(cv, size) {
+  var ctx=cv.getContext('2d');
+  var half=size/2, r=half-3, arc=(2*Math.PI)/N;
+  ctx.clearRect(0,0,size,size);
+  // Alternating slice colors per type
+  segments.forEach(function(seg,i){
+    var s=i*arc-Math.PI/2,e=s+arc;
+    ctx.beginPath();ctx.moveTo(half,half);ctx.arc(half,half,r,s,e);ctx.closePath();
+    ctx.fillStyle=seg.color;ctx.fill();
+    ctx.strokeStyle='rgba(255,199,0,0.5)';ctx.lineWidth=1.2;ctx.stroke();
+    // Draw icon + short label
+    ctx.save();ctx.translate(half,half);ctx.rotate(s+arc/2);
+    var dist=r*0.68;
+    ctx.textAlign='center';
+    // emoji
+    ctx.font=(size<200?11:14)+'px serif';
+    ctx.fillText(seg.icon, dist, -4);
+    // short text
+    ctx.fillStyle='rgba(255,199,0,0.95)';
+    ctx.font='bold '+(size<200?7.5:9.5)+'px DM Sans,sans-serif';
+    var short=seg.type==='sweet'?'Sweet':seg.type==='colddrink'?'Cold Drk':'Mojito';
+    ctx.fillText(short, dist, 8);
+    ctx.restore();
+  });
+  // Outer gold ring
+  ctx.beginPath();ctx.arc(half,half,r,0,2*Math.PI);
+  ctx.strokeStyle='rgba(255,199,0,0.7)';ctx.lineWidth=3;ctx.stroke();
+}
+
+function drawWheel() {
+  drawWheelOnCanvas(document.getElementById('wheel'), 170);
+  drawWheelOnCanvas(document.getElementById('wheelPopup'), 240);
+}
+drawWheel();
+
+function getTodayKey(){return 'dd_spin_'+new Date().toDateString();}
+(function(){
+  if(localStorage.getItem(getTodayKey())){
+    document.getElementById('spinBtn').disabled=true;
+    document.getElementById('spinBtnPopup').disabled=true;
+    document.getElementById('spinMsg').textContent='✓ Spun today – come back tomorrow!';
+    document.getElementById('spinMsgPopup').textContent='✓ Spun today – come back tomorrow!';
+  }
+})();
+
+// ═══ HELPERS ═══
+function openOverlay(id){document.getElementById(id).classList.add('show');}
+function closeOverlay(id){document.getElementById(id).classList.remove('show');}
+
+// addTap: fires on touchstart (instant on iOS) and click (desktop fallback)
+// preventDefault on touchstart stops the 300ms click delay AND ghost clicks
+function addTap(el,fn){
+  if(!el)return;
+  el.addEventListener('touchstart',function(e){e.preventDefault();fn(e);},{passive:false});
+  el.addEventListener('click',fn);
+}
+
+// ═══ CART ═══
+var ITEMS={
+  '1':{name:'Chicken Dum Biryani',price:199},
+  '2':{name:'Mutton Dum Biryani',price:269},
+  '3':{name:'Veg Dum Biryani',price:149},
+  '4':{name:'Prawn Dum Biryani',price:299},
+  '5':{name:'Egg Dum Biryani',price:159},
+  '6':{name:'Raita',price:39},
+  '7':{name:'Chicken 65',price:159},
+  '8':{name:'Lassi',price:59},
+  '9':{name:'Double Ka Meetha',price:89},
+  '10':{name:'Kulfi Falooda',price:99}
+};
+var cart={};
+
+function changeQty(id,delta){
+  var cur=cart[id]||0, next=Math.max(0,cur+delta);
+  if(next===0)delete cart[id]; else cart[id]=next;
+  var qEl=document.getElementById('qty-'+id);
+  if(qEl)qEl.textContent=next;
+  var row=document.getElementById('mi-'+id);
+  if(row)row.classList.toggle('in-cart',next>0);
+  updateCartUI();
+}
+
+function updateCartUI(){
+  var ids=Object.keys(cart);
+  var qty=ids.reduce(function(s,id){return s+cart[id];},0);
+  var subtotal=ids.reduce(function(s,id){return s+cart[id]*ITEMS[id].price;},0);
+
+  // Apply coupon discount
+  var discount=0;
+  if(appliedCoupon){
+    if(appliedCoupon.type==='sweet')      discount=89;   // Double Ka Meetha price
+    else if(appliedCoupon.type==='colddrink') discount=59; // Lassi price
+    else if(appliedCoupon.type==='mojito')    discount=79; // Mojito value
+    discount=Math.min(discount,subtotal);
+  }
+  var total=subtotal-discount;
+
+  var bar=document.getElementById('cartBar');
+  if(qty>0){
+    bar.classList.add('show');
+    document.getElementById('cartCountBubble').textContent=qty;
+    var totalStr='₹'+total;
+    if(discount>0) totalStr='₹'+total+' <span style="font-size:10px;text-decoration:line-through;opacity:0.6">₹'+subtotal+'</span>';
+    document.getElementById('cartTotal').innerHTML=totalStr;
+    // Show coupon applied indicator
+    var ind=document.getElementById('couponAppliedInd');
+    if(ind) ind.style.display=appliedCoupon?'block':'none';
+  } else {
+    bar.classList.remove('show');
+  }
+  var badge=document.getElementById('mainCartBadge');
+  badge.textContent=qty>0?qty+' items':'';
+  badge.classList.toggle('show',qty>0);
+}
+
+function orderViaWhatsApp(){
+  var ids=Object.keys(cart);
+  if(!ids.length)return;
+  var subtotal=ids.reduce(function(s,id){return s+cart[id]*ITEMS[id].price;},0);
+  var discount=0, freeItem='';
+  if(appliedCoupon){
+    if(appliedCoupon.type==='sweet'){      discount=89; freeItem='🍮 Free Sweet (Double Ka Meetha)';}
+    else if(appliedCoupon.type==='colddrink'){discount=59; freeItem='🥤 Free Cold Drink (Lassi)';}
+    else if(appliedCoupon.type==='mojito'){   discount=79; freeItem='🍹 Free Mojito';}
+    discount=Math.min(discount,subtotal);
+  }
+  var total=subtotal-discount;
+  var msg='🍛 *New Order – Dum Dynasty* 🍛\n\n📋 *Order Details:*\n';
+  ids.forEach(function(id){msg+='• '+ITEMS[id].name+' x'+cart[id]+' = ₹'+(ITEMS[id].price*cart[id])+'\n';});
+  if(freeItem) msg+='\n🎁 *Spin Coupon Applied:* '+appliedCoupon.code+'\n   → '+freeItem+' (FREE!)\n';
+  msg+='\n💰 *Subtotal: ₹'+subtotal+'*';
+  if(discount>0) msg+='\n🎉 *Discount: -₹'+discount+'*\n✅ *Total Payable: ₹'+total+'*';
+  msg+='\n\nPlease confirm my order!';
+  window.open('https://wa.me/918249692577?text='+encodeURIComponent(msg),'_blank');
+}
+
+// ═══ CART CONTROLS — touchstart delegation (most reliable on iOS) ═══
+var menuOverlay=document.getElementById('menuOverlay');
+function handleCtrl(e){
+  var btn=e.target.closest('.ctrl-btn');
+  if(!btn)return;
+  e.preventDefault();
+  e.stopPropagation();
+  var id=btn.getAttribute('data-id');
+  var delta=parseInt(btn.getAttribute('data-delta'),10);
+  if(id)changeQty(id,delta);
+}
+menuOverlay.addEventListener('touchstart',handleCtrl,{passive:false});
+menuOverlay.addEventListener('click',handleCtrl);
+
+// ═══ BUTTON BINDINGS ═══
+addTap(document.getElementById('menuBtn'),function(e){e.preventDefault();openOverlay('menuOverlay');});
+addTap(document.getElementById('offerBtn'),function(e){e.preventDefault();openOverlay('offerOverlay');});
+addTap(document.getElementById('menuClose'),function(){closeOverlay('menuOverlay');});
+addTap(document.getElementById('offerClose'),function(){closeOverlay('offerOverlay');});
+addTap(document.getElementById('claimClose'),function(){closeOverlay('claimModal');});
+// Spin card on main page → open popup
+addTap(document.getElementById('spinCardMain'),function(e){
+  // Don't open popup if they tapped the spin button itself
+  if(e.target.closest('#spinBtn'))return;
+  openOverlay('spinOverlay');
+});
+addTap(document.getElementById('spinOverlayClose'),function(){closeOverlay('spinOverlay');});
+
+// Backdrop tap to close
+['menuOverlay','offerOverlay','resultModal','claimModal','spinOverlay'].forEach(function(id){
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeOverlay(id);});
+});
+
+// Shared spin logic — works for both inline button and popup button
+function doSpinAction(inlineBtn, popupBtn, inlineMsg, popupMsg, wheelEl, wheelPopupEl) {
+  if(spinning||localStorage.getItem(getTodayKey()))return;
+  spinning=true;
+  inlineBtn.disabled=true; inlineBtn.textContent='⏳ Spinning…';
+  popupBtn.disabled=true;  popupBtn.textContent='⏳ Spinning…';
+
+  // Weighted random prize pick
+  wonPrize = weightedRandom();
+  var land  = getSegmentForType(wonPrize.type);
+  wonCoupon = genCoupon(wonPrize.couponPrefix);
+
+  var extra=6+Math.floor(Math.random()*4);
+  var sa=360/N;
+  // Calculate angle so pointer lands on center of chosen segment
+  var landAngle = land*sa + sa/2;
+  // We want the top (0°) to point at that segment after spinning
+  var target = extra*360 + (360 - landAngle);
+  curAngle = (curAngle % 360) + target;
+
+  wheelEl.style.transition    = 'transform 4.2s cubic-bezier(.17,.67,.12,1)';
+  wheelPopupEl.style.transition = 'transform 4.2s cubic-bezier(.17,.67,.12,1)';
+  wheelEl.style.transform     = 'rotate('+curAngle+'deg)';
+  wheelPopupEl.style.transform = 'rotate('+curAngle+'deg)';
+
+  setTimeout(function(){
+    spinning=false;
+    localStorage.setItem(getTodayKey(),'1');
+    var doneMsg='✓ Spun for today – come back tomorrow!';
+    inlineMsg.textContent=doneMsg; popupMsg.textContent=doneMsg;
+    inlineBtn.textContent='🎯 Already Spun'; popupBtn.textContent='🎯 Already Spun';
+
+    // Show coupon win popup
+    document.getElementById('resultEmoji').textContent  = wonPrize.emoji;
+    document.getElementById('resultTitle').textContent  = 'You Won '+wonPrize.label+'!';
+    document.getElementById('resultDesc').textContent   = wonPrize.desc;
+    document.getElementById('resultCode').textContent   = wonCoupon;
+    // Show prize type badge
+    var badge = document.getElementById('resultPrizeBadge');
+    badge.textContent = wonPrize.type==='mojito' ? '🌟 Rare Win!' : wonPrize.type==='colddrink' ? '🥤 Cool Win!' : '🍮 Sweet Win!';
+    badge.className   = 'result-prize-badge badge-'+wonPrize.type;
+    closeOverlay('spinOverlay');
+    openOverlay('resultModal');
+  },4400);
+}
+
+var inlineBtn   = document.getElementById('spinBtn');
+var popupBtn    = document.getElementById('spinBtnPopup');
+var inlineMsg   = document.getElementById('spinMsg');
+var popupMsg    = document.getElementById('spinMsgPopup');
+var wheelEl     = document.getElementById('wheel');
+var wheelPopupEl= document.getElementById('wheelPopup');
+
+addTap(inlineBtn, function(){ doSpinAction(inlineBtn,popupBtn,inlineMsg,popupMsg,wheelEl,wheelPopupEl); });
+addTap(popupBtn,  function(){ doSpinAction(inlineBtn,popupBtn,inlineMsg,popupMsg,wheelEl,wheelPopupEl); });
+
+// Result CTA
+addTap(document.getElementById('resultCTA'),function(){
+  closeOverlay('resultModal');
+  document.getElementById('claimCouponDisplay').textContent=wonCoupon;
+  document.getElementById('successCouponCode').textContent=wonCoupon;
+  var prizeLabel = wonPrize ? wonPrize.label : '';
+  document.getElementById('claimPrizeTag').textContent   = prizeLabel;
+  document.getElementById('successPrizeTag').textContent = prizeLabel;
+  document.getElementById('claimSuccessEmoji').textContent = wonPrize ? wonPrize.emoji : '🎊';
+  document.getElementById('claimFormContent').style.display='block';
+  document.getElementById('claimSuccess').style.display='none';
+  document.getElementById('claimName').value='';
+  document.getElementById('claimPhone').value='';
+  openOverlay('claimModal');
+});
+
+// Submit claim
+addTap(document.getElementById('submitClaimBtn'),function(){
+  var name=document.getElementById('claimName').value.trim();
+  var phone=document.getElementById('claimPhone').value.trim();
+  if(!name){alert('Please enter your name.');return;}
+  if(!phone||phone.length<10){alert('Please enter a valid mobile number.');return;}
+  var log=JSON.parse(localStorage.getItem('dd_claim_log')||'[]');
+  log.push({name:name,phone:phone,coupon:wonCoupon,prize:wonPrize?wonPrize.type:'',date:new Date().toISOString()});
+  localStorage.setItem('dd_claim_log',JSON.stringify(log));
+  // Store coupon for later use
+  var couponStore={code:wonCoupon, type:wonPrize?wonPrize.type:'', label:wonPrize?wonPrize.label:''};
+  localStorage.setItem('dd_active_coupon',JSON.stringify(couponStore));
+  document.getElementById('claimFormContent').style.display='none';
+  document.getElementById('claimSuccess').style.display='block';
+});
+
+// Apply coupon to cart from success screen
+addTap(document.getElementById('applyToCartBtn'),function(){
+  var stored=localStorage.getItem('dd_active_coupon');
+  if(stored){
+    var c=JSON.parse(stored);
+    appliedCoupon={code:c.code, type:c.type, label:c.label};
+    // Pre-fill coupon field in menu
+    var inp=document.getElementById('couponCodeInput');
+    if(inp) inp.value=c.code;
+    showCouponApplied(c);
+  }
+  closeClaim();
+  openOverlay('menuOverlay');
+  updateCartUI();
+});
+
+// Coupon input in menu panel
+function showCouponApplied(c){
+  var msgEl=document.getElementById('couponAppliedMsg');
+  if(!msgEl)return;
+  msgEl.style.display='block';
+  msgEl.className='coupon-applied-msg success';
+  msgEl.textContent='✅ '+c.label+' applied! Discount reflected in total.';
+  updateCartUI();
+}
+
+function tryApplyCoupon(){
+  var code=document.getElementById('couponCodeInput').value.trim().toUpperCase();
+  var msgEl=document.getElementById('couponAppliedMsg');
+  if(!code){msgEl.style.display='none';return;}
+  // Check against stored coupon
+  var stored=localStorage.getItem('dd_active_coupon');
+  if(stored){
+    var c=JSON.parse(stored);
+    if(c.code.toUpperCase()===code){
+      appliedCoupon={code:c.code,type:c.type,label:c.label};
+      showCouponApplied(c);
+      return;
+    }
+  }
+  // Invalid
+  msgEl.style.display='block';
+  msgEl.className='coupon-applied-msg error';
+  msgEl.textContent='❌ Invalid coupon. Spin the wheel to win one!';
+  appliedCoupon=null;
+  updateCartUI();
+}
+
+function closeClaim(){ closeOverlay('claimModal'); }
+addTap(document.getElementById('couponApplyBtn'), tryApplyCoupon);
+document.getElementById('couponCodeInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter') tryApplyCoupon();
+});
+
+// Cart bar
+addTap(document.getElementById('cartBar'),orderViaWhatsApp);
+
+// ESC
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape')['menuOverlay','offerOverlay','resultModal','claimModal','spinOverlay'].forEach(closeOverlay);
+});
+</script>
+</body>
+</html>
